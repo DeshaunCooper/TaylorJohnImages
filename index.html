@@ -41,7 +41,7 @@ nav { position:fixed; top:0; left:0; right:0; z-index:500; display:flex; justify
 .section-bg { position:absolute; inset:0; background-size:cover; background-position:center center; filter:brightness(0.78); transition:transform 1s cubic-bezier(0.16,1,0.3,1), filter 0.6s ease; }
 .section:hover .section-bg { transform:scale(1.04); filter:brightness(0.88); }
 .section-overlay { position:absolute; inset:0; z-index:2; background:linear-gradient(to bottom,rgba(0,0,0,0.0) 0%,rgba(0,0,0,0.0) 30%,rgba(0,0,0,0.28) 65%,rgba(0,0,0,0.65) 100%); }
-.section-label { position:relative; z-index:3; text-align:center; display:flex; flex-direction:column; align-items:center; gap:16px; opacity:0; transform:translateY(16px); transition:opacity 0.9s ease, transform 0.9s ease; }
+.section-label { position:relative; z-index:3; text-align:center; display:flex; flex-direction:column; align-items:center; gap:16px; opacity:1; transform:translateY(0); transition:opacity 0.9s ease, transform 0.9s ease; }
 .section.visible .section-label { opacity:1; transform:translateY(0); }
 .section-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(80px,12vw,168px); letter-spacing:0.06em; line-height:0.88; color:#fff; text-shadow:0 4px 60px rgba(0,0,0,0.35); }
 .section-cta { font-size:8px; letter-spacing:0.32em; text-transform:uppercase; color:#fff; border:1px solid rgba(255,255,255,0.5); padding:10px 26px; cursor:pointer; background:transparent; font-family:'Montserrat',sans-serif; font-weight:300; transition:border-color 0.3s, background 0.3s; backdrop-filter:blur(4px); }
@@ -341,10 +341,15 @@ footer { padding:28px 48px; display:flex; justify-content:space-between; align-i
 </div>
 
 <script>
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.2 });
-  document.querySelectorAll('.section, .section-contact').forEach(s => obs.observe(s));
+  // Show labels immediately on page load, then keep visible on scroll
+  function revealSections() {
+    document.querySelectorAll('.section, .section-contact').forEach(s => {
+      s.classList.add('visible');
+    });
+  }
+  // Fire immediately and on scroll
+  revealSections();
+  window.addEventListener('scroll', revealSections, { passive: true });
 
   const galleries = {
     sports: {
